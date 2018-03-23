@@ -17,7 +17,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public class Sender {
 	private static final int SEND_NUMBER = 10000;
-
+	private static final String TOPICS_NAME = "topics_1";
+	private static final String QUEUE_NAME = "queue_1";
 	public static void main(String[] args) {
 		// Jms用ConnectionFactory创建连接
 		ConnectionFactory connectionFactory;
@@ -37,8 +38,11 @@ public class Sender {
 			connection = connectionFactory.createConnection();
 			connection.start();
 			session = connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
-			//地址
-			destination = session.createQueue("mxl");
+			/**
+			 * 队列模式session.createQueue("mxl");
+			 * 主题模式session.createTopic("mxl");
+			 */
+			destination = session.createTopic(TOPICS_NAME);
 			// 得到消息生成者【发送者】
 			producer = session.createProducer(destination);
 			//设置不持久化

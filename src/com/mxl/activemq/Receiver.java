@@ -16,7 +16,9 @@ import com.mxl.activemq.listener.AMQMessageListener;
  *
  */
 public class Receiver {
-
+	
+	private static final String TOPICS_NAME = "topics_1";
+	private static final String QUEUE_NAME = "queue_1";
 	public static void main(String[] args) {
 		// ConnectionFactory ：连接工厂，JMS 用它创建连接
 		ConnectionFactory connectionFactory;
@@ -37,26 +39,30 @@ public class Receiver {
 			connection.start();
 			// 获取操作连接
 			session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
-			destination = session.createQueue("mxl");
+			/**
+			 * 队列模式session.createQueue("mxl");
+			 * 主题模式session.createTopic("mxl");主题模式需要提前预定主题，不然无法收到消息。
+			 */
+			destination = session.createTopic(TOPICS_NAME);
 			consumer = session.createConsumer(destination);
-			//consumer.setMessageListener(new AMQMessageListener());
-			while (true) {
-				// 设置接收者接收消息的时间，为了便于测试，这里谁定为100s
-				TextMessage message = (TextMessage) consumer.receive(500000);
-				if (null != message) {
-					System.out.println("收到消息" + message.getText());
-				} else {
-					break;
-				}
-			}
+			consumer.setMessageListener(new AMQMessageListener());
+//			while (true) {
+//				// 设置接收者接收消息的时间，为了便于测试，这里谁定为100s
+//				TextMessage message = (TextMessage) consumer.receive(500000);
+//				if (null != message) {
+//					System.out.println("收到消息" + message.getText());
+//				} else {
+//					break;
+//				}
+//			}
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
-			try {
-				if (null != connection)
-					connection.close();
-			} catch (Throwable ignore) {
-			}
+//			try {
+//				if (null != connection)
+//					connection.close();
+//			} catch (Throwable ignore) {
+//			}
 		}
 	}
 }
