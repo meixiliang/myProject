@@ -58,6 +58,7 @@ public class Receiver {
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
+			//使用监听器是异步的，不能关闭连接，不然无法收到消息。
 //			try {
 //				if (null != connection)
 //					connection.close();
